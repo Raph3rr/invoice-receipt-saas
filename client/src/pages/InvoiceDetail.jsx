@@ -4,13 +4,8 @@ import api from "../services/api.js";
 import Loader from "../components/common/Loader.jsx";
 import Button from "../components/common/Button.jsx";
 
-const accentFromName = (name = "") => {
-  const hues = [220, 260, 300, 340, 15, 40, 160, 190];
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  const hue = hues[Math.abs(hash) % hues.length];
-  return { bg: `hsl(${hue}, 70%, 40%)` };
-};
+// Same fixed brand accent as receipts, for consistent branding across the app.
+const INVOICE_ACCENT = { bg: "#2563EB" };
 
 const InvoiceDetail = () => {
   const { token } = useParams();
@@ -62,10 +57,10 @@ const InvoiceDetail = () => {
   }
 
   const { business, customerName, items, total, dueDate, status, isOverdue, notes, createdAt } = data;
-  const accent = accentFromName(business.name);
+  const accent = INVOICE_ACCENT;
 
   const statusLabel = status === "paid" ? "Paid" : isOverdue ? "Overdue" : "Unpaid";
-  const statusColor = status === "paid" ? "#16a34a" : isOverdue ? "#dc2626" : "#d97706";
+  const statusColor = status === "paid" ? "#16A34A" : isOverdue ? "#DC2626" : "#d97706";
 
   return (
     <div className="min-h-screen bg-gray-200 py-10 px-4 print:bg-white print:py-0 flex justify-center">
@@ -92,7 +87,7 @@ const InvoiceDetail = () => {
             </div>
             <div className="flex justify-between text-xs text-gray-500 mb-4">
               <span>Due date</span>
-              <span className={isOverdue ? "text-red-600 font-medium" : ""}>
+              <span className={isOverdue ? "text-danger font-medium" : ""}>
                 {new Date(dueDate).toLocaleDateString()}
               </span>
             </div>
@@ -146,7 +141,7 @@ const InvoiceDetail = () => {
             Print / Save as PDF
           </Button>
           {!shareSupported && (
-            <button onClick={handleCopyLink} className="text-sm text-blue-600 hover:underline mt-1 text-center">
+            <button onClick={handleCopyLink} className="text-sm text-brand hover:underline mt-1 text-center">
               {copied ? "Link copied!" : "Copy invoice link instead"}
             </button>
           )}

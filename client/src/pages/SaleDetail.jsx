@@ -24,12 +24,12 @@ const SaleDetail = () => {
   }, [id]);
 
   if (loading) return <Loader label="Loading sale..." />;
-  if (error) return <div className="p-6 text-red-600 text-sm">{error}</div>;
+  if (error) return <div className="p-6 text-danger text-sm">{error}</div>;
   if (!sale) return null;
 
   return (
     <div className="p-6 max-w-lg">
-      <Link to="/sales" className="text-sm text-blue-600 hover:underline">
+      <Link to="/sales" className="text-sm text-brand hover:underline">
         ← Back to Sales
       </Link>
 
@@ -39,6 +39,7 @@ const SaleDetail = () => {
       </p>
 
       <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+        <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 text-gray-500 text-left">
             <tr>
@@ -59,6 +60,7 @@ const SaleDetail = () => {
             ))}
           </tbody>
         </table>
+        </div>
         <div className="px-4 py-3 bg-gray-50 flex items-center justify-between font-semibold">
           <span>Total</span>
           <span>₦{Number(sale.total).toLocaleString()}</span>

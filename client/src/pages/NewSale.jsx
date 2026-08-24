@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import api from "../services/api.js";
 import Input from "../components/common/Input.jsx";
 import Button from "../components/common/Button.jsx";
@@ -7,10 +7,15 @@ import Loader from "../components/common/Loader.jsx";
 
 const NewSale = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const fromInvoiceId = searchParams.get("fromInvoice");
+
   const [products, setProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [prefillNote, setPrefillNote] = useState("");
+  const [skippedItems, setSkippedItems] = useState([]);
 
   const [customerName, setCustomerName] = useState("");
   const [selectedProductId, setSelectedProductId] = useState("");
@@ -22,6 +27,28 @@ const NewSale = () => {
       try {
         const { data } = await api.get("/products");
         setProducts(data.products);
+
+        if (fromInvoiceId) {
+          const invRes = await api.get(`/invoices/${fromInvoiceId}`);
+          const invoice = invRes.data.invoice;
+          setCustomerName(invoice.customerName);
+
+          const matched = [];
+          const skipped = [];
+          invoice.items.forEach((item) => {
+            // Only items tied to a real product in the catalog can be pre-filled —
+            // a custom line item on an invoice (e.g. a service) has nothing to deduct stock from.
+            const stillExists = item.productId && data.products.some((p) => p._id === item.productId);
+            if (stillExists) {
+              matched.push({ productId: item.productId, name: item.name, price: item.price, quantity: item.quantity });
+            } else {
+              skipped.push(item.name);
+            }
+          });
+          setCart(matched);
+          setSkippedItems(skipped);
+          setPrefillNote(`Pre-filled from the invoice you just marked paid for ${invoice.customerName}. Review before recording.`);
+        }
       } catch (err) {
         setError(err.response?.data?.message || "Could not load products");
       } finally {
@@ -29,7 +56,8 @@ const NewSale = () => {
       }
     };
     loadProducts();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fromInvoiceId]);
 
   const handleAddToCart = () => {
     if (!selectedProductId || selectedQty < 1) return;
@@ -83,7 +111,7 @@ const NewSale = () => {
         <h1 className="text-xl font-semibold mb-4">New Sale</h1>
         <p className="text-gray-500 text-sm">
           You don't have any products yet.{" "}
-          <button onClick={() => navigate("/products/new")} className="text-blue-600 hover:underline">
+          <button onClick={() => navigate("/products/new")} className="text-brand hover:underline">
             Add a product first
           </button>
           .
@@ -97,8 +125,21 @@ const NewSale = () => {
       <h1 className="text-xl font-semibold mb-6">New Sale</h1>
 
       {error && (
-        <div className="mb-4 rounded-md bg-red-50 border border-red-200 text-red-700 text-sm px-3 py-2">
+        <div className="mb-4 rounded-md bg-red-50 border border-red-200 text-danger text-sm px-3 py-2">
           {error}
+        </div>
+      )}
+
+      {prefillNote && (
+        <div className="mb-4 rounded-md bg-brand-light border border-brand/30 text-brand-dark text-sm px-3 py-2">
+          {prefillNote}
+        </div>
+      )}
+
+      {skippedItems.length > 0 && (
+        <div className="mb-4 rounded-md bg-amber-50 border border-amber-200 text-amber-800 text-sm px-3 py-2">
+          These invoice items weren't from your product catalog, so add them manually if needed:{" "}
+          <strong>{skippedItems.join(", ")}</strong>
         </div>
       )}
 
@@ -109,13 +150,13 @@ const NewSale = () => {
         placeholder="Walk-in customer"
       />
 
-      <div className="flex items-end gap-3 mt-4">
+      <div className="flex flex-col sm:flex-row sm:items-end gap-3 mt-4">
         <div className="flex-1 flex flex-col gap-1">
           <label className="text-sm font-medium text-gray-700">Product</label>
           <select
             value={selectedProductId}
             onChange={(e) => setSelectedProductId(e.target.value)}
-            className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
           >
             <option value="">Select a product</option>
             {products.map((p) => (
@@ -125,7 +166,7 @@ const NewSale = () => {
             ))}
           </select>
         </div>
-        <div className="w-24">
+        <div className="w-full sm:w-24">
           <Input
             label="Qty"
             type="number"
@@ -141,6 +182,7 @@ const NewSale = () => {
 
       {cart.length > 0 && (
         <div className="mt-6 bg-white border border-gray-200 rounded-lg overflow-hidden">
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-gray-50 text-gray-500 text-left">
               <tr>
@@ -159,7 +201,7 @@ const NewSale = () => {
                   <td className="px-4 py-2 text-right">
                     <button
                       onClick={() => handleRemoveFromCart(item.productId)}
-                      className="text-red-600 hover:underline"
+                      className="text-danger hover:underline"
                     >
                       Remove
                     </button>
@@ -168,6 +210,7 @@ const NewSale = () => {
               ))}
             </tbody>
           </table>
+          </div>
           <div className="px-4 py-3 bg-gray-50 flex items-center justify-between font-semibold">
             <span>Total</span>
             <span>₦{total.toLocaleString()}</span>

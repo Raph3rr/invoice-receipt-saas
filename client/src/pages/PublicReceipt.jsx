@@ -4,15 +4,9 @@ import api from "../services/api.js";
 import Loader from "../components/common/Loader.jsx";
 import Button from "../components/common/Button.jsx";
 
-// Turns a business name into a consistent color, so every business gets its own
-// accent color without needing to pick one manually.
-const accentFromName = (name = "") => {
-  const hues = [220, 260, 300, 340, 15, 40, 160, 190];
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
-  const hue = hues[Math.abs(hash) % hues.length];
-  return { bg: `hsl(${hue}, 70%, 40%)`, light: `hsl(${hue}, 85%, 96%)` };
-};
+// Every receipt uses the app's brand color as its accent, so branding stays
+// consistent across every business rather than a different random hue each time.
+const RECEIPT_ACCENT = { bg: "#2563EB", light: "#EFF6FF" };
 
 const PublicReceipt = () => {
   const { token } = useParams();
@@ -71,7 +65,7 @@ const PublicReceipt = () => {
   }
 
   const { business, sale } = data;
-  const accent = accentFromName(business.name);
+  const accent = RECEIPT_ACCENT;
   const receiptNo = token.slice(0, 8).toUpperCase();
 
   return (
@@ -101,7 +95,7 @@ const PublicReceipt = () => {
           <div className="px-6 pt-5 pb-6 -mt-4 bg-white rounded-t-2xl relative">
             <div className="flex justify-between text-[11px] text-gray-400 uppercase tracking-wider mb-1">
               <span>Receipt #{receiptNo}</span>
-              <span className="text-green-600 font-semibold">Paid</span>
+              <span className="font-semibold" style={{ color: "#16A34A" }}>Paid</span>
             </div>
             <div className="flex justify-between text-xs text-gray-500 mb-4">
               <span>{new Date(sale.createdAt).toLocaleString()}</span>
@@ -173,7 +167,7 @@ const PublicReceipt = () => {
             Print / Save as PDF
           </Button>
           {!shareSupported && (
-            <button onClick={handleCopyLink} className="text-sm text-blue-600 hover:underline mt-1 text-center">
+            <button onClick={handleCopyLink} className="text-sm text-brand hover:underline mt-1 text-center">
               {copied ? "Link copied!" : "Copy receipt link instead"}
             </button>
           )}

@@ -33,7 +33,7 @@ const Sales = () => {
       </div>
 
       {error && (
-        <div className="mb-4 rounded-md bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3">
+        <div className="mb-4 rounded-md bg-red-50 border border-red-200 text-danger text-sm px-4 py-3">
           {error}
         </div>
       )}
@@ -43,12 +43,13 @@ const Sales = () => {
       ) : sales.length === 0 && !error ? (
         <div className="text-center py-16 text-gray-400">
           <p>No sales recorded yet.</p>
-          <Link to="/sales/new" className="text-blue-600 hover:underline text-sm">
+          <Link to="/sales/new" className="text-brand hover:underline text-sm">
             Record your first sale
           </Link>
         </div>
       ) : (
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-gray-50 text-gray-500 text-left">
               <tr>
@@ -67,7 +68,7 @@ const Sales = () => {
                   <td className="px-4 py-3">{s.items.length} item{s.items.length !== 1 ? "s" : ""}</td>
                   <td className="px-4 py-3 font-medium">₦{Number(s.total).toLocaleString()}</td>
                   <td className="px-4 py-3 text-right">
-                    <Link to={`/sales/${s._id}`} className="text-blue-600 hover:underline">
+                    <Link to={`/sales/${s._id}`} className="text-brand hover:underline">
                       View
                     </Link>
                   </td>
@@ -75,6 +76,7 @@ const Sales = () => {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
     </div>

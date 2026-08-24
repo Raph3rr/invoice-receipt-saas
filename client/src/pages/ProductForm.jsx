@@ -70,7 +70,7 @@ const ProductForm = () => {
       <h1 className="text-xl font-semibold mb-6">{isEditing ? "Edit Product" : "Add Product"}</h1>
 
       {error && (
-        <div className="mb-4 rounded-md bg-red-50 border border-red-200 text-red-700 text-sm px-3 py-2">
+        <div className="mb-4 rounded-md bg-red-50 border border-red-200 text-danger text-sm px-3 py-2">
           {error}
         </div>
       )}

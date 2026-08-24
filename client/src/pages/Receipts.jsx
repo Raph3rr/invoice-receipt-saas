@@ -34,7 +34,7 @@ const Receipts = () => {
     <div className="p-6">
       <h1 className="text-xl font-semibold mb-6">Receipts</h1>
 
-      {error && <div className="mb-4 text-red-600 text-sm">{error}</div>}
+      {error && <div className="mb-4 text-danger text-sm">{error}</div>}
 
       {loading ? (
         <Loader label="Loading receipts..." />
@@ -44,6 +44,7 @@ const Receipts = () => {
         </p>
       ) : (
         <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-gray-50 text-gray-500 text-left">
               <tr>
@@ -60,7 +61,7 @@ const Receipts = () => {
                   <td className="px-4 py-3">{r.saleId?.customerName}</td>
                   <td className="px-4 py-3 font-medium">₦{Number(r.saleId?.total || 0).toLocaleString()}</td>
                   <td className="px-4 py-3 text-right whitespace-nowrap">
-                    <Link to={`/receipt/${r.token}`} className="text-blue-600 hover:underline mr-4">
+                    <Link to={`/receipt/${r.token}`} className="text-brand hover:underline mr-4">
                       View Receipt
                     </Link>
                     <button onClick={() => copyLink(r)} className="text-gray-600 hover:underline">
@@ -71,6 +72,7 @@ const Receipts = () => {
               ))}
             </tbody>
           </table>
+          </div>
         </div>
       )}
     </div>

@@ -26,7 +26,7 @@ const ReceiptDetail = () => {
   }, [id]);
 
   if (loading) return <Loader label="Loading receipt..." />;
-  if (error) return <div className="p-6 text-red-600 text-sm">{error}</div>;
+  if (error) return <div className="p-6 text-danger text-sm">{error}</div>;
   if (!receipt) return null;
 
   const publicUrl = `${window.location.origin}/receipt/${receipt.token}`;
@@ -40,7 +40,7 @@ const ReceiptDetail = () => {
 
   return (
     <div className="p-6 max-w-lg">
-      <Link to="/receipts" className="text-sm text-blue-600 hover:underline">
+      <Link to="/receipts" className="text-sm text-brand hover:underline">
         ← Back to Receipts
       </Link>
 
@@ -49,25 +49,26 @@ const ReceiptDetail = () => {
         {new Date(sale.createdAt).toLocaleString()} · {sale.customerName}
       </p>
 
-      <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
-        <p className="text-sm text-blue-800 mb-2">Share this link with your customer:</p>
+      <div className="bg-brand-light border border-brand/30 rounded-md p-4 mb-6">
+        <p className="text-sm text-brand-navy mb-2">Share this link with your customer:</p>
         <div className="flex items-center gap-2">
           <input
             readOnly
             value={publicUrl}
-            className="flex-1 text-sm bg-white border border-blue-200 rounded px-2 py-1.5 text-gray-600"
+            className="flex-1 text-sm bg-white border border-brand/30 rounded px-2 py-1.5 text-gray-600"
             onFocus={(e) => e.target.select()}
           />
           <Button type="button" onClick={handleCopy}>
             {copied ? "Copied!" : "Copy"}
           </Button>
         </div>
-        <a href={publicUrl} target="_blank" rel="noreferrer" className="text-sm text-blue-700 hover:underline mt-2 inline-block">
+        <a href={publicUrl} target="_blank" rel="noreferrer" className="text-sm text-brand-dark hover:underline mt-2 inline-block">
           Open public receipt page →
         </a>
       </div>
 
       <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+        <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-gray-50 text-gray-500 text-left">
             <tr>
@@ -86,6 +87,7 @@ const ReceiptDetail = () => {
             ))}
           </tbody>
         </table>
+        </div>
         <div className="px-4 py-3 bg-gray-50 flex items-center justify-between font-semibold">
           <span>Total</span>
           <span>₦{Number(sale.total).toLocaleString()}</span>

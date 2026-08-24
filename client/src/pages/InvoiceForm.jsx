@@ -105,17 +105,17 @@ const InvoiceForm = () => {
       <h1 className="text-xl font-semibold mb-6">New Invoice</h1>
 
       {error && (
-        <div className="mb-4 rounded-md bg-red-50 border border-red-200 text-red-700 text-sm px-3 py-2">
+        <div className="mb-4 rounded-md bg-red-50 border border-red-200 text-danger text-sm px-3 py-2">
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Input label="Customer name" value={customerName} onChange={(e) => setCustomerName(e.target.value)} required />
           <Input label="Due date" type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} required />
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Input label="Customer email (optional)" type="email" value={customerEmail} onChange={(e) => setCustomerEmail(e.target.value)} />
           <Input label="Customer phone (optional)" value={customerPhone} onChange={(e) => setCustomerPhone(e.target.value)} />
         </div>
@@ -124,13 +124,13 @@ const InvoiceForm = () => {
           <p className="text-sm font-medium text-gray-700 mb-3">Add items</p>
 
           {products.length > 0 && (
-            <div className="flex items-end gap-3 mb-3">
+            <div className="flex flex-col sm:flex-row sm:items-end gap-3 mb-3">
               <div className="flex-1 flex flex-col gap-1">
                 <label className="text-xs text-gray-500">From your products</label>
                 <select
                   value={selectedProductId}
                   onChange={(e) => setSelectedProductId(e.target.value)}
-                  className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
                 >
                   <option value="">Select a product</option>
                   {products.map((p) => (
@@ -140,7 +140,7 @@ const InvoiceForm = () => {
                   ))}
                 </select>
               </div>
-              <div className="w-20">
+              <div className="w-full sm:w-20">
                 <Input label="Qty" type="number" min="1" value={selectedQty} onChange={(e) => setSelectedQty(e.target.value)} />
               </div>
               <Button type="button" variant="secondary" onClick={handleAddProduct}>
@@ -150,11 +150,11 @@ const InvoiceForm = () => {
           )}
 
           <p className="text-xs text-gray-400 mb-2">Or add a custom line item (e.g. a service):</p>
-          <div className="flex items-end gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-end gap-3">
             <div className="flex-1">
               <Input label="Description" value={customName} onChange={(e) => setCustomName(e.target.value)} />
             </div>
-            <div className="w-28">
+            <div className="w-full sm:w-28">
               <Input label="Price (₦)" type="number" min="0" value={customPrice} onChange={(e) => setCustomPrice(e.target.value)} />
             </div>
             <Button type="button" variant="secondary" onClick={handleAddCustom}>
@@ -165,6 +165,7 @@ const InvoiceForm = () => {
 
         {cart.length > 0 && (
           <div className="bg-white border border-gray-200 rounded-lg overflow-hidden mt-2">
+            <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <tbody>
                 {cart.map((item) => (
@@ -173,7 +174,7 @@ const InvoiceForm = () => {
                     <td className="px-4 py-2 text-gray-500">×{item.quantity}</td>
                     <td className="px-4 py-2">₦{(item.price * item.quantity).toLocaleString()}</td>
                     <td className="px-4 py-2 text-right">
-                      <button type="button" onClick={() => handleRemove(item.key)} className="text-red-600 hover:underline">
+                      <button type="button" onClick={() => handleRemove(item.key)} className="text-danger hover:underline">
                         Remove
                       </button>
                     </td>
@@ -181,6 +182,7 @@ const InvoiceForm = () => {
                 ))}
               </tbody>
             </table>
+            </div>
             <div className="px-4 py-3 bg-gray-50 flex items-center justify-between font-semibold">
               <span>Total</span>
               <span>₦{total.toLocaleString()}</span>
@@ -195,7 +197,7 @@ const InvoiceForm = () => {
             onChange={(e) => setNotes(e.target.value)}
             rows={2}
             placeholder="Payment terms, bank details, etc."
-            className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
           />
         </div>
 

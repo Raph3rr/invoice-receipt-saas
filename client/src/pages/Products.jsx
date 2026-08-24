@@ -70,7 +70,7 @@ const Products = () => {
         </Link>
       </div>
 
-      <div className="mb-6 flex items-center gap-2 text-sm bg-gray-50 border border-gray-200 rounded-md px-3 py-2 w-fit">
+      <div className="mb-6 flex flex-wrap items-center gap-2 text-sm bg-gray-50 border border-gray-200 rounded-md px-3 py-2 w-full sm:w-fit">
         <span className="text-gray-600">Notify me when stock reaches</span>
         <input
           type="number"
@@ -83,21 +83,21 @@ const Products = () => {
         <button
           onClick={handleSaveThreshold}
           disabled={savingThreshold || Number(thresholdInput) === threshold}
-          className="text-blue-600 hover:underline disabled:text-gray-300 disabled:no-underline ml-1"
+          className="text-brand hover:underline disabled:text-gray-300 disabled:no-underline ml-1"
         >
           {savingThreshold ? "Saving..." : "Save"}
         </button>
       </div>
 
       {lowStockProducts.length > 0 && (
-        <div className="mb-6 rounded-md bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3">
+        <div className="mb-6 rounded-md bg-red-50 border border-red-200 text-danger text-sm px-4 py-3">
           <strong>{lowStockProducts.length}</strong> product{lowStockProducts.length !== 1 ? "s are" : " is"} at or
           below your low-stock threshold: {lowStockProducts.map((p) => p.name).join(", ")}
         </div>
       )}
 
       {error && (
-        <div className="mb-4 rounded-md bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 flex items-center justify-between">
+        <div className="mb-6 rounded-md bg-red-50 border border-red-200 text-danger text-sm px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <span>{error}</span>
           {error.includes("business") && (
             <Button variant="secondary" onClick={() => navigate("/onboarding")}>
@@ -112,12 +112,13 @@ const Products = () => {
       ) : products.length === 0 && !error ? (
         <div className="text-center py-16 text-gray-400">
           <p>No products yet.</p>
-          <Link to="/products/new" className="text-blue-600 hover:underline text-sm">
+          <Link to="/products/new" className="text-brand hover:underline text-sm">
             Add your first product
           </Link>
         </div>
       ) : (
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-gray-50 text-gray-500 text-left">
               <tr>
@@ -137,18 +138,20 @@ const Products = () => {
                     <td className="px-4 py-3 text-gray-500">{p.category || "—"}</td>
                     <td className="px-4 py-3">₦{Number(p.price).toLocaleString()}</td>
                     <td className="px-4 py-3">
-                      <span className={isLow ? "text-red-600 font-medium" : ""}>{p.quantity}</span>
-                      {isLow && (
-                        <span className="ml-2 inline-block text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full">
-                          Low stock
-                        </span>
-                      )}
+                      <div className="flex flex-col items-start gap-1">
+                        <span className={isLow ? "text-danger font-medium" : ""}>{p.quantity}</span>
+                        {isLow && (
+                          <span className="text-[11px] leading-none whitespace-nowrap bg-red-100 text-danger px-2 py-1 rounded-full">
+                            Low stock
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <Link to={`/products/${p._id}/edit`} className="text-blue-600 hover:underline mr-4">
+                      <Link to={`/products/${p._id}/edit`} className="text-brand hover:underline mr-4">
                         Edit
                       </Link>
-                      <button onClick={() => handleDelete(p._id)} className="text-red-600 hover:underline">
+                      <button onClick={() => handleDelete(p._id)} className="text-danger hover:underline">
                         Delete
                       </button>
                     </td>
@@ -157,6 +160,7 @@ const Products = () => {
               })}
             </tbody>
           </table>
+          </div>
         </div>
       )}
     </div>

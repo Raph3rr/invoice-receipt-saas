@@ -130,6 +130,22 @@ export const markInvoicePaid = async (req, res) => {
   }
 };
 
+// DELETE /api/invoices/:id
+export const deleteInvoice = async (req, res) => {
+  try {
+    const businessId = requireBusiness(req, res);
+    if (!businessId) return;
+
+    const invoice = await Invoice.findOneAndDelete({ _id: req.params.id, businessId });
+    if (!invoice) {
+      return res.status(404).json({ success: false, message: "Invoice not found" });
+    }
+    res.json({ success: true, message: "Invoice deleted" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 // GET /api/invoices/public/:token — PUBLIC, no auth — what the customer sees
 export const getPublicInvoice = async (req, res) => {
   try {

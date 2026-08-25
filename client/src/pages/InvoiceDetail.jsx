@@ -21,7 +21,6 @@ const InvoiceDetail = () => {
   const [loading, setLoading] = useState(true);
 
   const [shareSupported, setShareSupported] = useState(false);
-  const [copied, setCopied] = useState(false);
   const [sharing, setSharing] = useState(false);
   const [downloading, setDownloading] = useState(false);
 
@@ -164,25 +163,24 @@ const InvoiceDetail = () => {
     }
   };
 
-  /*
-   * Copy the public invoice URL.
-   *
-   * This is separate from Share Invoice.
-   */
-  const handleCopyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const { data } = await api.get(`/invoices/public/${token}`);
+        setData(data.invoice);
+      } catch (err) {
+        setError(
+          err.response?.data?.message || "This invoice could not be found",
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      setCopied(true);
+    load();
+  }, [token]);
 
-      setTimeout(() => {
-        setCopied(false);
-      }, 2000);
-    } catch (err) {
-      console.error("Could not copy invoice link:", err);
-    }
-  };
-
+  // IMPORTANT: keep these
   if (loading) {
     return <Loader label="Loading invoice..." />;
   }
@@ -195,6 +193,12 @@ const InvoiceDetail = () => {
     );
   }
 
+  // Extra safety check
+  if (!data) {
+    return null;
+  }
+
+  // Only destructure after data exists
   const {
     business,
     customerName,
@@ -360,14 +364,6 @@ const InvoiceDetail = () => {
           >
             Print / Save as PDF
           </Button>
-
-          {/* Copy Invoice Link */}
-          <button
-            onClick={handleCopyLink}
-            className="text-sm text-brand hover:underline mt-1 text-center"
-          >
-            {copied ? "Invoice link copied!" : "Copy invoice link"}
-          </button>
         </div>
       </div>
     </div>

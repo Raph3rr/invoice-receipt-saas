@@ -22,7 +22,6 @@ const PublicReceipt = () => {
   const [loading, setLoading] = useState(true);
 
   const [shareSupported, setShareSupported] = useState(false);
-  const [copied, setCopied] = useState(false);
   const [sharing, setSharing] = useState(false);
 
   useEffect(() => {
@@ -108,20 +107,22 @@ const PublicReceipt = () => {
     }
   };
 
-  // Copy the receipt URL separately.
-  const handleCopyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const { data } = await api.get(`/receipts/public/${token}`);
+        setData(data.receipt);
+      } catch (err) {
+        setError(
+          err.response?.data?.message || "This receipt could not be found",
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      setCopied(true);
-
-      setTimeout(() => {
-        setCopied(false);
-      }, 2000);
-    } catch (err) {
-      console.error("Failed to copy receipt link:", err);
-    }
-  };
+    load();
+  }, [token]);
 
   if (loading) {
     return <Loader label="Loading receipt..." />;
@@ -133,6 +134,10 @@ const PublicReceipt = () => {
         {error}
       </div>
     );
+  }
+
+  if (!data) {
+    return null;
   }
 
   const { business, sale } = data;
@@ -301,14 +306,6 @@ const PublicReceipt = () => {
           >
             Print / Save as PDF
           </Button>
-
-          {/* Copy LINK separately */}
-          <button
-            onClick={handleCopyLink}
-            className="text-sm text-brand hover:underline mt-1 text-center"
-          >
-            {copied ? "Link copied!" : "Copy receipt link instead"}
-          </button>
         </div>
       </div>
     </div>

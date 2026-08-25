@@ -352,16 +352,6 @@ const InvoiceDetail = () => {
             {sharing ? "Preparing Invoice..." : "Share Invoice"}
           </Button>
 
-          {/* Download Invoice Image */}
-          <Button
-            className="w-full"
-            variant="secondary"
-            onClick={handleDownload}
-            disabled={downloading}
-          >
-            {downloading ? "Preparing Download..." : "Download Invoice"}
-          </Button>
-
           {/* Print / Save as PDF */}
           <Button
             className="w-full"

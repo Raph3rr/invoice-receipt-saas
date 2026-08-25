@@ -19,6 +19,11 @@ const InvoiceSchema = new mongoose.Schema(
       ref: "Business",
       required: true,
     },
+    customerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Customer",
+      default: null,
+    },
     customerName: { type: String, required: true, trim: true },
     customerEmail: { type: String, trim: true, lowercase: true },
     customerPhone: { type: String, trim: true },

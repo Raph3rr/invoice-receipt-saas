@@ -1,12 +1,21 @@
 import { Router } from "express";
-import { notImplemented } from "../controllers/customerController.js";
+import {
+  createCustomer,
+  getCustomers,
+  getCustomer,
+  updateCustomer,
+  deleteCustomer,
+} from "../controllers/customerController.js";
+import { protect } from "../middleware/authMiddleware.js";
 
 const router = Router();
 
-router.get("/", notImplemented);
-router.post("/", notImplemented);
-router.get("/:id", notImplemented);
-router.put("/:id", notImplemented);
-router.delete("/:id", notImplemented);
+router.use(protect);
+
+router.get("/", getCustomers);
+router.post("/", createCustomer);
+router.get("/:id", getCustomer);
+router.put("/:id", updateCustomer);
+router.delete("/:id", deleteCustomer);
 
 export default router;

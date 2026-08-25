@@ -107,23 +107,6 @@ const PublicReceipt = () => {
     }
   };
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const { data } = await api.get(`/receipts/public/${token}`);
-        setData(data.receipt);
-      } catch (err) {
-        setError(
-          err.response?.data?.message || "This receipt could not be found",
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    load();
-  }, [token]);
-
   if (loading) {
     return <Loader label="Loading receipt..." />;
   }
@@ -134,10 +117,6 @@ const PublicReceipt = () => {
         {error}
       </div>
     );
-  }
-
-  if (!data) {
-    return null;
   }
 
   const { business, sale } = data;

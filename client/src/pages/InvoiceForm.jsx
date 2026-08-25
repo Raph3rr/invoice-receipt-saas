@@ -9,6 +9,8 @@ const InvoiceForm = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
+  const [customers, setCustomers] = useState([]);
+  const [selectedCustomerId, setSelectedCustomerId] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -29,6 +31,12 @@ const InvoiceForm = () => {
       try {
         const { data } = await api.get("/products");
         setProducts(data.products);
+        try {
+          const custRes = await api.get("/customers");
+          setCustomers(custRes.data.customers);
+        } catch (custErr) {
+          // fine to continue without saved customers
+        }
       } catch (err) {
         // fine to continue with an empty catalog — custom line items still work
       } finally {
@@ -83,6 +91,7 @@ const InvoiceForm = () => {
     setSubmitting(true);
     try {
       const { data } = await api.post("/invoices", {
+        customerId: selectedCustomerId || undefined,
         customerName,
         customerEmail: customerEmail || undefined,
         customerPhone: customerPhone || undefined,
@@ -111,8 +120,41 @@ const InvoiceForm = () => {
       )}
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        {customers.length > 0 && (
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-gray-700">Select a saved customer (optional)</label>
+            <select
+              value={selectedCustomerId}
+              onChange={(e) => {
+                const custId = e.target.value;
+                setSelectedCustomerId(custId);
+                const found = customers.find((c) => c._id === custId);
+                if (found) {
+                  setCustomerName(found.name);
+                  setCustomerEmail(found.email || "");
+                  setCustomerPhone(found.phone || "");
+                }
+              }}
+              className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+            >
+              <option value="">Type a new customer below</option>
+              {customers.map((c) => (
+                <option key={c._id} value={c._id}>{c.name}</option>
+              ))}
+            </select>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Input label="Customer name" value={customerName} onChange={(e) => setCustomerName(e.target.value)} required />
+          <Input
+            label="Customer name"
+            value={customerName}
+            onChange={(e) => {
+              setCustomerName(e.target.value);
+              if (selectedCustomerId) setSelectedCustomerId("");
+            }}
+            required
+          />
           <Input label="Due date" type="date" value={dueDate} onChange={(e) => setDueDate(e.target.value)} required />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

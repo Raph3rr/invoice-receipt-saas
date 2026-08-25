@@ -1,11 +1,30 @@
-// Customer model — schema to be implemented in the corresponding development phase.
-// See Development Guide Section 24 (Core Model Fields) for planned fields.
-
 import mongoose from "mongoose";
 
 const CustomerSchema = new mongoose.Schema(
   {
-    // TODO: define fields
+    businessId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Business",
+      required: true,
+    },
+    name: {
+      type: String,
+      required: [true, "Customer name is required"],
+      trim: true,
+    },
+    phone: {
+      type: String,
+      trim: true,
+    },
+    email: {
+      type: String,
+      trim: true,
+      lowercase: true,
+    },
+    address: {
+      type: String,
+      trim: true,
+    },
   },
   { timestamps: true }
 );

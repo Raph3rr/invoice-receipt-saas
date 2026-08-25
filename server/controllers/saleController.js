@@ -14,13 +14,13 @@ const requireBusiness = (req, res) => {
 };
 
 // POST /api/sales
-// Body: { customerName?, items: [{ productId, quantity }] }
+// Body: { customerId?, customerName?, items: [{ productId, quantity }] }
 export const createSale = async (req, res) => {
   try {
     const businessId = requireBusiness(req, res);
     if (!businessId) return;
 
-    const { customerName, items } = req.body;
+    const { customerId, customerName, items } = req.body;
 
     if (!Array.isArray(items) || items.length === 0) {
       return res.status(400).json({ success: false, message: "At least one item is required" });
@@ -63,6 +63,7 @@ export const createSale = async (req, res) => {
 
     const sale = await Sale.create({
       businessId,
+      customerId: customerId || null,
       customerName: customerName || "Walk-in customer",
       items: resolvedItems,
       total,

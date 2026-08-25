@@ -12,6 +12,8 @@ const NewSale = () => {
 
   const [products, setProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
+  const [customers, setCustomers] = useState([]);
+  const [selectedCustomerId, setSelectedCustomerId] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [prefillNote, setPrefillNote] = useState("");
@@ -27,6 +29,13 @@ const NewSale = () => {
       try {
         const { data } = await api.get("/products");
         setProducts(data.products);
+
+        try {
+          const custRes = await api.get("/customers");
+          setCustomers(custRes.data.customers);
+        } catch (custErr) {
+          // fine to continue without saved customers — walk-in name still works
+        }
 
         if (fromInvoiceId) {
           const invRes = await api.get(`/invoices/${fromInvoiceId}`);
@@ -92,6 +101,7 @@ const NewSale = () => {
     setSubmitting(true);
     try {
       const { data } = await api.post("/sales", {
+        customerId: selectedCustomerId || undefined,
         customerName: customerName || undefined,
         items: cart.map(({ productId, quantity }) => ({ productId, quantity })),
       });
@@ -143,10 +153,34 @@ const NewSale = () => {
         </div>
       )}
 
+      {customers.length > 0 && (
+        <div className="flex flex-col gap-1 mb-4">
+          <label className="text-sm font-medium text-gray-700">Select a saved customer (optional)</label>
+          <select
+            value={selectedCustomerId}
+            onChange={(e) => {
+              const custId = e.target.value;
+              setSelectedCustomerId(custId);
+              const found = customers.find((c) => c._id === custId);
+              setCustomerName(found ? found.name : "");
+            }}
+            className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand"
+          >
+            <option value="">Walk-in / type a name below</option>
+            {customers.map((c) => (
+              <option key={c._id} value={c._id}>{c.name}</option>
+            ))}
+          </select>
+        </div>
+      )}
+
       <Input
         label="Customer name (optional)"
         value={customerName}
-        onChange={(e) => setCustomerName(e.target.value)}
+        onChange={(e) => {
+          setCustomerName(e.target.value);
+          if (selectedCustomerId) setSelectedCustomerId(""); // typing manually overrides the picker
+        }}
         placeholder="Walk-in customer"
       />
 

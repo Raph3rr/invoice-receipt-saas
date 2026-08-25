@@ -11,14 +11,14 @@ const requireBusiness = (req, res) => {
 };
 
 // POST /api/invoices
-// Body: { customerName, customerEmail?, customerPhone?, dueDate, notes?, items: [{ productId?, name?, price?, quantity }] }
+// Body: { customerId?, customerName, customerEmail?, customerPhone?, dueDate, notes?, items: [{ productId?, name?, price?, quantity }] }
 // Items can reference an existing product (price snapshot pulled automatically) OR be a free-text line (custom name + price).
 export const createInvoice = async (req, res) => {
   try {
     const businessId = requireBusiness(req, res);
     if (!businessId) return;
 
-    const { customerName, customerEmail, customerPhone, dueDate, notes, items } = req.body;
+    const { customerId, customerName, customerEmail, customerPhone, dueDate, notes, items } = req.body;
 
     if (!customerName || !dueDate) {
       return res.status(400).json({ success: false, message: "Customer name and due date are required" });
@@ -66,6 +66,7 @@ export const createInvoice = async (req, res) => {
 
     const invoice = await Invoice.create({
       businessId,
+      customerId: customerId || null,
       customerName,
       customerEmail,
       customerPhone,

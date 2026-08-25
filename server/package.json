@@ -1,9 +1,9 @@
 {
-  "name": "invoice-saas-server",
+  "name": "sellza-server",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Backend API for the Invoice & Receipt SaaS (Project 1)",
+  "description": "Backend API for Sellza — Sell. Invoice. Grow.",
   "main": "server.js",
   "scripts": {
     "dev": "nodemon server.js",

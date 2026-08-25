@@ -163,24 +163,6 @@ const InvoiceDetail = () => {
     }
   };
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const { data } = await api.get(`/invoices/public/${token}`);
-        setData(data.invoice);
-      } catch (err) {
-        setError(
-          err.response?.data?.message || "This invoice could not be found",
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    load();
-  }, [token]);
-
-  // IMPORTANT: keep these
   if (loading) {
     return <Loader label="Loading invoice..." />;
   }
@@ -193,12 +175,6 @@ const InvoiceDetail = () => {
     );
   }
 
-  // Extra safety check
-  if (!data) {
-    return null;
-  }
-
-  // Only destructure after data exists
   const {
     business,
     customerName,

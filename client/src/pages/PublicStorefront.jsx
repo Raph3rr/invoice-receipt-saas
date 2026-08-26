@@ -1,0 +1,101 @@
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import api from "../services/api.js";
+import Loader from "../components/common/Loader.jsx";
+
+const PublicStorefront = () => {
+  const { slug } = useParams();
+  const [data, setData] = useState(null);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const { data } = await api.get(`/storefront/${slug}`);
+        setData(data);
+      } catch (err) {
+        setError(err.response?.data?.message || "This storefront could not be found");
+      } finally {
+        setLoading(false);
+      }
+    };
+    load();
+  }, [slug]);
+
+  if (loading) return <Loader label="Loading storefront..." />;
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-gray-500 text-sm p-6 text-center">
+        {error}
+      </div>
+    );
+  }
+
+  const { business, products } = data;
+
+  // Prefer a WhatsApp deep link if there's a phone number, since that's the
+  // "contact directly to order" flow this storefront is built around.
+  const contactHref = business.phone
+    ? `https://wa.me/${business.phone.replace(/[^0-9]/g, "")}`
+    : business.email
+    ? `mailto:${business.email}`
+    : null;
+
+  return (
+    <div className="min-h-screen bg-surface">
+      <div className="bg-brand text-white px-6 py-10 text-center">
+        <div className="h-16 w-16 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-3 text-2xl font-bold">
+          {business.name?.charAt(0)?.toUpperCase() || "?"}
+        </div>
+        <h1 className="text-2xl font-bold">{business.name}</h1>
+        {business.category && <p className="text-white/80 text-sm mt-1">{business.category}</p>}
+        {business.description && <p className="text-white/80 text-sm mt-2 max-w-md mx-auto">{business.description}</p>}
+        {(business.city || business.state) && (
+          <p className="text-white/70 text-xs mt-2">
+            {business.city}{business.city && business.state ? ", " : ""}{business.state}
+          </p>
+        )}
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        {products.length === 0 ? (
+          <p className="text-center text-gray-400 text-sm">No products listed yet.</p>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {products.map((p) => (
+              <div key={p._id} className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                <div className="aspect-square bg-gray-100 flex items-center justify-center text-gray-300 text-xs">
+                  {p.image ? (
+                    <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
+                  ) : (
+                    "No image"
+                  )}
+                </div>
+                <div className="p-3">
+                  <p className="text-sm font-medium text-gray-900 truncate">{p.name}</p>
+                  <p className="text-sm text-brand font-semibold mt-1">₦{Number(p.price).toLocaleString()}</p>
+                  {p.quantity < 1 && <p className="text-xs text-danger mt-1">Out of stock</p>}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {contactHref && (
+        <a
+          href={contactHref}
+          target="_blank"
+          rel="noreferrer"
+          className="fixed bottom-5 right-5 bg-success text-white rounded-full px-5 py-3 shadow-lg text-sm font-medium hover:opacity-90"
+        >
+          Contact to Order
+        </a>
+      )}
+    </div>
+  );
+};
+
+export default PublicStorefront;

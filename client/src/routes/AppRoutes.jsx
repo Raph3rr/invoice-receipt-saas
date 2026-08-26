@@ -26,6 +26,8 @@ import Settings from "../pages/Settings.jsx";
 import SettingsBusiness from "../pages/SettingsBusiness.jsx";
 import SettingsReceipts from "../pages/SettingsReceipts.jsx";
 import SettingsAccount from "../pages/SettingsAccount.jsx";
+import Storefront from "../pages/Storefront.jsx";
+import PublicStorefront from "../pages/PublicStorefront.jsx";
 
 const AppRoutes = () => {
   return (
@@ -36,6 +38,7 @@ const AppRoutes = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/receipt/:token" element={<PublicReceipt />} />
       <Route path="/invoice/:token" element={<InvoiceDetail />} />
+      <Route path="/store/:slug" element={<PublicStorefront />} />
 
       {/* Authenticated, but no sidebar yet — business isn't set up */}
       <Route
@@ -78,6 +81,8 @@ const AppRoutes = () => {
         <Route path="/settings/business" element={<SettingsBusiness />} />
         <Route path="/settings/receipts" element={<SettingsReceipts />} />
         <Route path="/settings/account" element={<SettingsAccount />} />
+
+        <Route path="/storefront" element={<Storefront />} />
       </Route>
     </Routes>
   );

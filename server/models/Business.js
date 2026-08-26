@@ -61,6 +61,10 @@ const BusinessSchema = new mongoose.Schema(
       default: 5,
       min: 0,
     },
+    storefrontEnabled: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

@@ -15,6 +15,7 @@ import customerRoutes from "./routes/customerRoutes.js";
 import saleRoutes from "./routes/saleRoutes.js";
 import receiptRoutes from "./routes/receiptRoutes.js";
 import invoiceRoutes from "./routes/invoiceRoutes.js";
+import storefrontRoutes from "./routes/storefrontRoutes.js";
 
 const app = express();
 
@@ -44,6 +45,7 @@ app.use("/api/customers", customerRoutes);
 app.use("/api/sales", saleRoutes);
 app.use("/api/receipts", receiptRoutes);
 app.use("/api/invoices", invoiceRoutes);
+app.use("/api/storefront", storefrontRoutes);
 
 // Error handling
 app.use(notFound);

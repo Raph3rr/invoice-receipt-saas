@@ -108,7 +108,7 @@ const CustomerDetail = () => {
           {sales.map((s) => (
             <Link
               key={s._id}
-              to={`/receipts`}
+              to={s.receiptToken ? `/receipt/${s.receiptToken}` : "/receipts"}
               className="flex items-center justify-between px-4 py-3 border-b border-gray-100 last:border-0 text-sm hover:bg-gray-50"
             >
               <span>{new Date(s.createdAt).toLocaleDateString()} · {s.items.length} item{s.items.length !== 1 ? "s" : ""}</span>

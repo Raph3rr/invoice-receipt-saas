@@ -1,6 +1,7 @@
 import Customer from "../models/Customer.js";
 import Sale from "../models/Sale.js";
 import Invoice from "../models/Invoice.js";
+import Receipt from "../models/Receipt.js";
 
 const requireBusiness = (req, res) => {
   if (!req.user.businessId) {
@@ -57,7 +58,21 @@ export const getCustomer = async (req, res) => {
       Invoice.find({ businessId, customerId: customer._id }).sort({ createdAt: -1 }),
     ]);
 
-    res.json({ success: true, customer, sales, invoices });
+    // Sales don't carry their own shareable link — a Receipt is a separate record
+    // that points back at a sale. Look up each sale's receipt token so the customer's
+    // history can link directly to the right receipt instead of a generic list.
+    const receipts = await Receipt.find({ saleId: { $in: sales.map((s) => s._id) } });
+    const tokenBySaleId = {};
+    receipts.forEach((r) => {
+      tokenBySaleId[r.saleId.toString()] = r.token;
+    });
+
+    const salesWithReceiptToken = sales.map((s) => ({
+      ...s.toObject(),
+      receiptToken: tokenBySaleId[s._id.toString()] || null,
+    }));
+
+    res.json({ success: true, customer, sales: salesWithReceiptToken, invoices });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

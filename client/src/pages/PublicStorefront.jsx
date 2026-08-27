@@ -178,7 +178,7 @@ const PublicStorefront = () => {
       : null;
 
   return (
-    <div className="min-h-screen bg-surface">
+    <div className="min-h-screen bg-[#b8babb]">
       {/* Storefront Hero */}
       <div
         className="relative bg-cover bg-center bg-no-repeat text-white px-6 py-12 text-center overflow-hidden"

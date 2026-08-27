@@ -3,6 +3,20 @@ import { useParams } from "react-router-dom";
 import api from "../services/api.js";
 import Loader from "../components/common/Loader.jsx";
 
+// A universal, generated abstract pattern — works for any kind of business
+// (thrift, electronics, food, services) without needing a per-business banner
+// upload. Pure CSS gradients, no image file, no licensing concerns.
+const universalBackgroundStyle = {
+  backgroundColor: "#2563EB",
+  backgroundImage: `
+    radial-gradient(circle at 15% 20%, rgba(255,255,255,0.12) 0, rgba(255,255,255,0.12) 60px, transparent 61px),
+    radial-gradient(circle at 85% 15%, rgba(255,255,255,0.10) 0, rgba(255,255,255,0.10) 90px, transparent 91px),
+    radial-gradient(circle at 50% 85%, rgba(255,255,255,0.08) 0, rgba(255,255,255,0.08) 120px, transparent 121px),
+    radial-gradient(circle at 90% 80%, rgba(255,255,255,0.10) 0, rgba(255,255,255,0.10) 50px, transparent 51px),
+    linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)
+  `,
+};
+
 const PublicStorefront = () => {
   const { slug } = useParams();
   const [data, setData] = useState(null);
@@ -35,8 +49,6 @@ const PublicStorefront = () => {
 
   const { business, products } = data;
 
-  // Prefer a WhatsApp deep link if there's a phone number, since that's the
-  // "contact directly to order" flow this storefront is built around.
   const contactHref = business.phone
     ? `https://wa.me/${business.phone.replace(/[^0-9]/g, "")}`
     : business.email
@@ -45,15 +57,31 @@ const PublicStorefront = () => {
 
   return (
     <div className="min-h-screen bg-surface">
-      <div className="bg-brand text-white px-6 py-10 text-center">
-        <div className="h-16 w-16 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-3 text-2xl font-bold">
-          {business.name?.charAt(0)?.toUpperCase() || "?"}
-        </div>
+      <div style={universalBackgroundStyle} className="text-white px-6 py-12 text-center">
+        {business.logo ? (
+          <img
+            src={business.logo}
+            alt={business.name}
+            className="h-20 w-20 rounded-full object-cover mx-auto mb-3 border-4 border-white/30"
+          />
+        ) : (
+          <div className="h-20 w-20 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-3 text-3xl font-bold">
+            {business.name?.charAt(0)?.toUpperCase() || "?"}
+          </div>
+        )}
+
         <h1 className="text-2xl font-bold">{business.name}</h1>
-        {business.category && <p className="text-white/80 text-sm mt-1">{business.category}</p>}
-        {business.description && <p className="text-white/80 text-sm mt-2 max-w-md mx-auto">{business.description}</p>}
+
+        {business.slogan && (
+          <p className="text-white/90 text-sm font-medium mt-1">{business.slogan}</p>
+        )}
+
+        {business.description && (
+          <p className="text-white/75 text-sm mt-3 max-w-md mx-auto">{business.description}</p>
+        )}
+
         {(business.city || business.state) && (
-          <p className="text-white/70 text-xs mt-2">
+          <p className="text-white/60 text-xs mt-3">
             {business.city}{business.city && business.state ? ", " : ""}{business.state}
           </p>
         )}

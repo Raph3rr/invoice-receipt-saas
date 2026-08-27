@@ -28,8 +28,13 @@ const BusinessSchema = new mongoose.Schema(
       trim: true,
     },
     logo: {
-      type: String, // URL — Cloudinary upload wired up in a later phase
+      type: String, // Cloudinary URL
       default: null,
+    },
+    slogan: {
+      type: String,
+      trim: true,
+      maxlength: 80,
     },
     phone: {
       type: String,

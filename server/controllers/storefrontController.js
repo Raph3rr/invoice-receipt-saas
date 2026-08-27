@@ -6,7 +6,7 @@ import Product from "../models/Product.js";
 export const getStorefront = async (req, res) => {
   try {
     const business = await Business.findOne({ slug: req.params.slug }).select(
-      "name slug logo description category phone email address city state storefrontEnabled"
+      "name slug logo slogan description category phone email address city state storefrontEnabled"
     );
 
     if (!business || !business.storefrontEnabled) {

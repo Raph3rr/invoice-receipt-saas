@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../services/api.js";
 import Input from "../components/common/Input.jsx";
 import Button from "../components/common/Button.jsx";
+import ImageUpload from "../components/common/ImageUpload.jsx";
 
 const categories = [
   "Perfume", "Thrift / Fashion", "Shoes", "Cosmetics", "Phones / Electronics",
@@ -22,6 +23,8 @@ const Onboarding = () => {
     city: "",
     state: "",
     footerMessage: "",
+    logo: "",
+    slogan: "",
   });
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -59,7 +62,22 @@ const Onboarding = () => {
         )}
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <ImageUpload
+            label="Business logo (optional — you can add this later in Settings)"
+            value={form.logo}
+            onChange={(url) => setForm({ ...form, logo: url })}
+          />
+
           <Input label="Business name" name="name" value={form.name} onChange={handleChange} required />
+
+          <Input
+            label="Slogan (optional)"
+            name="slogan"
+            value={form.slogan}
+            onChange={handleChange}
+            placeholder="e.g. Home of Quality Wears"
+            maxLength={80}
+          />
 
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Category</label>

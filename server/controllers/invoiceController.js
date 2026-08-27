@@ -155,7 +155,7 @@ export const getPublicInvoice = async (req, res) => {
       return res.status(404).json({ success: false, message: "Invoice not found" });
     }
     const business = await Business.findById(invoice.businessId).select(
-      "name logo phone email address city state receiptSettings"
+      "name logo slogan phone email address city state receiptSettings"
     );
     if (!business) {
       return res.status(404).json({ success: false, message: "Invoice not found" });

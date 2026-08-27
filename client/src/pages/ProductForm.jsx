@@ -4,13 +4,14 @@ import api from "../services/api.js";
 import Input from "../components/common/Input.jsx";
 import Button from "../components/common/Button.jsx";
 import Loader from "../components/common/Loader.jsx";
+import ImageUpload from "../components/common/ImageUpload.jsx";
 
 const ProductForm = () => {
   const { id } = useParams(); // present only when editing
   const isEditing = Boolean(id);
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({ name: "", price: "", quantity: "", category: "" });
+  const [form, setForm] = useState({ name: "", price: "", quantity: "", category: "", image: "" });
   const [loading, setLoading] = useState(isEditing);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -25,6 +26,7 @@ const ProductForm = () => {
           price: data.product.price,
           quantity: data.product.quantity,
           category: data.product.category || "",
+          image: data.product.image || "",
         });
       } catch (err) {
         setError(err.response?.data?.message || "Could not load product");
@@ -49,6 +51,7 @@ const ProductForm = () => {
         price: Number(form.price),
         quantity: Number(form.quantity) || 0,
         category: form.category,
+        image: form.image,
       };
       if (isEditing) {
         await api.put(`/products/${id}`, payload);
@@ -76,6 +79,12 @@ const ProductForm = () => {
       )}
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <ImageUpload
+          label="Product photo (optional)"
+          value={form.image}
+          onChange={(url) => setForm({ ...form, image: url })}
+        />
+
         <Input label="Product name" name="name" value={form.name} onChange={handleChange} required />
         <Input
           label="Price (₦)"

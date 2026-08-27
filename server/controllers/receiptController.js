@@ -40,7 +40,7 @@ export const getPublicReceipt = async (req, res) => {
 
     const sale = await Sale.findById(receipt.saleId);
     const business = await Business.findById(receipt.businessId).select(
-      "name logo phone email address city state receiptSettings"
+      "name logo slogan phone email address city state receiptSettings"
     );
 
     if (!sale || !business) {

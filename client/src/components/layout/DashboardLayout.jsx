@@ -9,6 +9,7 @@ const navItems = [
   { to: "/customers", label: "Customers" },
   { to: "/receipts", label: "Receipts" },
   { to: "/invoices", label: "Invoices" },
+  { to: "/storefront", label: "Storefront" },
   { to: "/settings", label: "Settings" },
 ];
 

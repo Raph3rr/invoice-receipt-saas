@@ -140,12 +140,20 @@ const PublicReceipt = () => {
             className="px-6 pt-6 pb-8 text-center text-white"
             style={{ backgroundColor: accent.bg }}
           >
-            <div
-              className="h-12 w-12 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-3 text-lg font-bold"
-              style={{ letterSpacing: "0.5px" }}
-            >
-              {business.name?.charAt(0)?.toUpperCase() || "?"}
-            </div>
+            {business.logo ? (
+              <img
+                src={business.logo}
+                alt={business.name}
+                className="h-12 w-12 rounded-full object-cover mx-auto mb-3 border-2 border-white/40"
+              />
+            ) : (
+              <div
+                className="h-12 w-12 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-3 text-lg font-bold"
+                style={{ letterSpacing: "0.5px" }}
+              >
+                {business.name?.charAt(0)?.toUpperCase() || "?"}
+              </div>
+            )}
 
             <h1 className="text-lg font-bold tracking-wide">{business.name}</h1>
 

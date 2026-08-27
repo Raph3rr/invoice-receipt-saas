@@ -212,7 +212,20 @@ const InvoiceDetail = () => {
             style={{ backgroundColor: accent.bg }}
           >
             <div className="flex items-center justify-between mb-4">
-              <h1 className="text-lg font-bold">{business.name}</h1>
+              <div className="flex items-center gap-3">
+                {business.logo ? (
+                  <img
+                    src={business.logo}
+                    alt={business.name}
+                    className="h-9 w-9 rounded-full object-cover border-2 border-white/40"
+                  />
+                ) : (
+                  <div className="h-9 w-9 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold">
+                    {business.name?.charAt(0)?.toUpperCase() || "?"}
+                  </div>
+                )}
+                <h1 className="text-lg font-bold">{business.name}</h1>
+              </div>
 
               <span
                 className="text-xs font-semibold px-2 py-1 rounded-full bg-white"

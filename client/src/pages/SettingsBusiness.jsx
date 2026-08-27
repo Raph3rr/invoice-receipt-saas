@@ -4,6 +4,7 @@ import api from "../services/api.js";
 import Input from "../components/common/Input.jsx";
 import Button from "../components/common/Button.jsx";
 import Loader from "../components/common/Loader.jsx";
+import ImageUpload from "../components/common/ImageUpload.jsx";
 
 const categories = [
   "Perfume", "Thrift / Fashion", "Shoes", "Cosmetics", "Phones / Electronics",
@@ -30,6 +31,8 @@ const SettingsBusiness = () => {
           address: data.business.address || "",
           city: data.business.city || "",
           state: data.business.state || "",
+          logo: data.business.logo || "",
+          slogan: data.business.slogan || "",
         });
       } catch (err) {
         setError(err.response?.data?.message || "Could not load business details");
@@ -81,7 +84,22 @@ const SettingsBusiness = () => {
       )}
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <ImageUpload
+          label="Business logo"
+          value={form.logo}
+          onChange={(url) => setForm({ ...form, logo: url })}
+        />
+
         <Input label="Business name" name="name" value={form.name} onChange={handleChange} required />
+
+        <Input
+          label="Slogan"
+          name="slogan"
+          value={form.slogan}
+          onChange={handleChange}
+          placeholder="e.g. Home of Quality Wears"
+          maxLength={80}
+        />
 
         <div className="flex flex-col gap-1">
           <label className="text-sm font-medium text-gray-700">Category</label>

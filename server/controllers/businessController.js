@@ -10,7 +10,7 @@ export const createBusiness = async (req, res) => {
       return res.status(409).json({ success: false, message: "Business already set up for this account" });
     }
 
-    const { name, category, description, phone, email, address, city, state, footerMessage } = req.body;
+    const { name, category, description, phone, email, address, city, state, footerMessage, logo, slogan } = req.body;
 
     if (!name) {
       return res.status(400).json({ success: false, message: "Business name is required" });
@@ -36,6 +36,8 @@ export const createBusiness = async (req, res) => {
       address,
       city,
       state,
+      logo,
+      slogan,
       receiptSettings: { footerMessage: footerMessage || "" },
     });
 
@@ -81,7 +83,7 @@ export const updateBusiness = async (req, res) => {
 export const getPublicBusiness = async (req, res) => {
   try {
     const business = await Business.findOne({ slug: req.params.slug }).select(
-      "name logo phone email address city state receiptSettings"
+      "name logo slogan phone email address city state receiptSettings"
     );
     if (!business) {
       return res.status(404).json({ success: false, message: "Business not found" });

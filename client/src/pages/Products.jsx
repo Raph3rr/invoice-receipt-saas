@@ -134,7 +134,18 @@ const Products = () => {
                 const isLow = p.quantity <= threshold;
                 return (
                   <tr key={p._id} className="border-t border-gray-100">
-                    <td className="px-4 py-3">{p.name}</td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        {p.image ? (
+                          <img src={p.image} alt={p.name} className="h-8 w-8 rounded object-cover border border-gray-200" />
+                        ) : (
+                          <div className="h-8 w-8 rounded bg-gray-100 flex items-center justify-center text-gray-300 text-[9px]">
+                            —
+                          </div>
+                        )}
+                        <span>{p.name}</span>
+                      </div>
+                    </td>
                     <td className="px-4 py-3 text-gray-500">{p.category || "—"}</td>
                     <td className="px-4 py-3">₦{Number(p.price).toLocaleString()}</td>
                     <td className="px-4 py-3">

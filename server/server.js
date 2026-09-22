@@ -19,7 +19,7 @@ import storefrontRoutes from "./routes/storefrontRoutes.js";
 
 const app = express();
 
-// Security & core middleware
+// Security & core middlewares
 app.use(helmet());
 app.use(
   cors({

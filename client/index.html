@@ -34,11 +34,7 @@
     />
 
     <!-- Favicons -->
-    <link
-      rel="icon"
-      href="/favicon.ico"
-      sizes="any"
-    />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
 
     <link
       rel="icon"
@@ -61,21 +57,9 @@
     />
 
     <!-- Mobile App Metadata -->
-    <meta
-      name="mobile-web-app-capable"
-      content="yes"
-    />
-
-    <meta
-      name="apple-mobile-web-app-capable"
-      content="yes"
-    />
-
-    <meta
-      name="apple-mobile-web-app-title"
-      content="SELLZA"
-    />
-
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="SELLZA" />
     <meta
       name="apple-mobile-web-app-status-bar-style"
       content="default"
@@ -83,11 +67,7 @@
 
     <!-- Open Graph / WhatsApp / Facebook -->
     <meta property="og:type" content="website" />
-
-    <meta
-      property="og:site_name"
-      content="SELLZA"
-    />
+    <meta property="og:site_name" content="SELLZA" />
 
     <meta
       property="og:title"
@@ -109,15 +89,8 @@
       content="https://sellza-kappa.vercel.app/og-image.png"
     />
 
-    <meta
-      property="og:image:width"
-      content="1200"
-    />
-
-    <meta
-      property="og:image:height"
-      content="630"
-    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
 
     <meta
       property="og:image:alt"
@@ -125,10 +98,7 @@
     />
 
     <!-- Twitter / X -->
-    <meta
-      name="twitter:card"
-      content="summary_large_image"
-    />
+    <meta name="twitter:card" content="summary_large_image" />
 
     <meta
       name="twitter:title"
@@ -145,10 +115,180 @@
       content="https://sellza-kappa.vercel.app/og-image.png"
     />
 
+    <!-- Initial Loading Skeleton -->
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #f9fafb;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      #initial-loader {
+        min-height: 100vh;
+        padding: 24px;
+        background: #f9fafb;
+      }
+
+      .loader-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 64px;
+      }
+
+      .loader-logo {
+        color: #2563eb;
+        font-size: 26px;
+        font-weight: 800;
+        letter-spacing: -1px;
+      }
+
+      .loader-menu {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+      }
+
+      .loader-content {
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+
+      .loader-line,
+      .loader-card,
+      .loader-button {
+        background: #e5e7eb;
+        animation: loader-pulse 1.5s ease-in-out infinite;
+      }
+
+      .loader-line {
+        height: 13px;
+        border-radius: 6px;
+        margin-bottom: 14px;
+      }
+
+      .loader-title {
+        width: 70%;
+        max-width: 420px;
+        height: 30px;
+        margin-bottom: 20px;
+      }
+
+      .loader-description {
+        width: 85%;
+        max-width: 520px;
+      }
+
+      .loader-button {
+        width: 145px;
+        height: 42px;
+        border-radius: 8px;
+        margin-top: 24px;
+      }
+
+      .loader-cards {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 56px;
+      }
+
+      .loader-card {
+        height: 125px;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        background: #fff;
+        padding: 20px;
+      }
+
+      .loader-card-line {
+        height: 12px;
+        width: 65%;
+        margin-bottom: 22px;
+        border-radius: 6px;
+        background: #e5e7eb;
+      }
+
+      .loader-card-value {
+        width: 45%;
+        height: 22px;
+        border-radius: 6px;
+        background: #e5e7eb;
+      }
+
+      @keyframes loader-pulse {
+        0%, 100% {
+          opacity: 1;
+        }
+
+        50% {
+          opacity: 0.45;
+        }
+      }
+
+      @media (min-width: 768px) {
+        #initial-loader {
+          padding: 40px 7%;
+        }
+
+        .loader-header {
+          margin-bottom: 90px;
+        }
+
+        .loader-title {
+          height: 40px;
+        }
+
+        .loader-cards {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+      }
+    </style>
   </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Visible before React starts -->
+      <div id="initial-loader">
+        <header class="loader-header">
+          <span class="loader-logo">SELLZA</span>
+          <div class="loader-menu loader-line"></div>
+        </header>
+
+        <main class="loader-content">
+          <div class="loader-line loader-title"></div>
+          <div class="loader-line loader-description"></div>
+          <div class="loader-line loader-description"></div>
+          <div class="loader-button"></div>
+
+          <div class="loader-cards">
+            <div class="loader-card">
+              <div class="loader-card-line"></div>
+              <div class="loader-card-value"></div>
+            </div>
+
+            <div class="loader-card">
+              <div class="loader-card-line"></div>
+              <div class="loader-card-value"></div>
+            </div>
+
+            <div class="loader-card">
+              <div class="loader-card-line"></div>
+              <div class="loader-card-value"></div>
+            </div>
+
+            <div class="loader-card">
+              <div class="loader-card-line"></div>
+              <div class="loader-card-value"></div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
 
     <script
       type="module"

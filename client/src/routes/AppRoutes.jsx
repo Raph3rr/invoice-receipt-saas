@@ -29,7 +29,17 @@ import SettingsAccount from "../pages/SettingsAccount.jsx";
 import Storefront from "../pages/Storefront.jsx";
 import PublicStorefront from "../pages/PublicStorefront.jsx";
 
+import NotFound from "../pages/NotFound.jsx";
+import Maintenance from "../pages/Maintenance.jsx";
+
 const AppRoutes = () => {
+  const maintenanceMode = import.meta.env.VITE_MAINTENANCE_MODE === "true";
+
+  // Display maintenance page instead of the entire application.
+  if (maintenanceMode) {
+    return <Maintenance />;
+  }
+
   return (
     <Routes>
       {/* Public */}
@@ -84,6 +94,9 @@ const AppRoutes = () => {
 
         <Route path="/storefront" element={<Storefront />} />
       </Route>
+
+      {/* Custom 404 — must remain the final route */}
+      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 };
